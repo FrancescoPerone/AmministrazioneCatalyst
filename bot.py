@@ -5,7 +5,7 @@ import logging
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from telegram import Update
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+from telegram.ext import Application, CommandHandler, MessageHandler, filters
 
 # Configura il logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -44,11 +44,11 @@ def update_google_sheet(text):
         body=body
     ).execute()
 
-def start(update: Update, context: CallbackContext):
+async def start(update: Update, context: CallbackContext):
     """ Comando /start per il bot """
     update.message.reply_text("Ciao! Inviami un'immagine e estrarrò il testo per te.")
 
-def handle_photo(update: Update, context: CallbackContext):
+async def handle_photo(update: Update, context: CallbackContext):
     """ Gestisce le immagini ricevute """
     photo_file = update.message.photo[-1].get_file()
     file_path = "image.jpg"
@@ -63,14 +63,12 @@ def handle_photo(update: Update, context: CallbackContext):
         update.message.reply_text("Non sono riuscito a estrarre il testo. Assicurati che sia leggibile!")
     os.remove(file_path)
 
-def main():
+async def main():
     """ Avvia il bot """
-    updater = Updater(TELEGRAM_TOKEN, use_context=True)
-    dp = updater.dispatcher
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(MessageHandler(Filters.photo, handle_photo))
-    updater.start_polling()
-    updater.idle()
+    application = Application.builder().token(TELEGRAM_TOKEN).build()
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(MessageHandler(filters.PHOTO, handle_photo))
+    await application.run_polling()
 
 if __name__ == "__main__":
     main()
