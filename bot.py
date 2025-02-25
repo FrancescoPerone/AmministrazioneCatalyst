@@ -12,7 +12,7 @@ import asyncio
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 # Carica il file JSON delle credenziali di Google Sheets
-GOOGLE_SHEETS_CREDENTIALS_FILE = "credentials.json"
+GOOGLE_SHEETS_CREDENTIALS_FILE = "/etc/secrets/credentials.json"
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 SERVICE_ACCOUNT_FILE = GOOGLE_SHEETS_CREDENTIALS_FILE
 
