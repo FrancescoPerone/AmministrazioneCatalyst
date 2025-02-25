@@ -20,11 +20,11 @@ creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FI
 service = build("sheets", "v4", credentials=creds)
 
 # ID del Google Sheet
-SPREADSHEET_ID = "TUA_SPREADSHEET_ID"
+SPREADSHEET_ID = "1w0WQu0HUvFNNYnsve1tD9fPMWYlOpo2kaw3YGHz2L-s"
 SHEET_NAME = "Foglio1"
 
 # Configura il bot Telegram
-TELEGRAM_TOKEN = "IL_TUO_BOT_TOKEN"
+TELEGRAM_TOKEN = "7864421966:AAFv7OMH40FE2IDRKvegC_qRdOaD99aXrHg"
 
 def ocr_image(image_path):
     """ Estrae testo da un'immagine usando Tesseract """
