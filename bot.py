@@ -20,11 +20,11 @@ creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FI
 service = build("sheets", "v4", credentials=creds)
 
 # ID del Google Sheet
-SPREADSHEET_ID = "1w0WQu0HUvFNNYnsve1tD9fPMWYlOpo2kaw3YGHz2L-s"
+SPREADSHEET_ID = "TUA_SPREADSHEET_ID"
 SHEET_NAME = "Foglio1"
 
 # Configura il bot Telegram
-TELEGRAM_TOKEN = "7864421966:AAFv7OMH40FE2IDRKvegC_qRdOaD99aXrHg"
+TELEGRAM_TOKEN = "IL_TUO_BOT_TOKEN"
 
 def ocr_image(image_path):
     """ Estrae testo da un'immagine usando Tesseract """
@@ -73,17 +73,15 @@ async def main():
     print("Bot avviato...")
     await application.initialize()
     await application.start()
-    await application.run_polling()
+    try:
+        await application.run_polling()
+    except RuntimeError:
+        pass
 
 if __name__ == "__main__":
     import asyncio
-
     try:
-        loop = asyncio.get_running_loop()
+        asyncio.run(main())
     except RuntimeError:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-
-    loop.run_until_complete(main())
-
-
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(main())
