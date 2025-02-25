@@ -53,7 +53,7 @@ async def handle_photo(update: Update, context):
     """ Gestisce le immagini ricevute """
     photo_file = await update.message.photo[-1].get_file()
     file_path = "image.jpg"
-    await photo_file.download(file_path)
+    await photo_file.download_to_drive(file_path)
     await update.message.reply_text("Immagine ricevuta! Estraendo il testo...")
     
     text = ocr_image(file_path)
@@ -73,7 +73,7 @@ async def main():
     print("Bot avviato...")
     await application.initialize()
     await application.start()
-    await application.updater.start_polling()
+    await application.run_polling()
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
