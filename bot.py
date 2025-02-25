@@ -73,7 +73,7 @@ async def main():
     print("Bot avviato...")
     await application.initialize()
     await application.start()
-    await application.run_until_disconnected()
+    await application.updater.start_polling()
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
