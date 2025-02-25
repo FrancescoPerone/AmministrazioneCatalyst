@@ -53,7 +53,7 @@ async def handle_photo(update: Update, context):
     """ Gestisce le immagini ricevute """
     photo_file = await update.message.photo[-1].get_file()
     file_path = "image.jpg"
-    await photo_file.download_to_drive(file_path)
+    await photo_file.download(file_path)
     await update.message.reply_text("Immagine ricevuta! Estraendo il testo...")
     
     text = ocr_image(file_path)
@@ -68,7 +68,7 @@ async def main():
     """ Avvia il bot """
     application = Application.builder().token(TELEGRAM_TOKEN).build()
     application.add_handler(CommandHandler("start", start))
-    application.add_handler(MessageHandler(filters.PHOTO, handle_photo))
+    application.add_handler(MessageHandler(filters.ALL & filters.PHOTO, handle_photo))
     
     print("Bot avviato...")
     await application.initialize()
