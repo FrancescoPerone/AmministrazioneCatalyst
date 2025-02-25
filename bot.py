@@ -44,23 +44,23 @@ def update_google_sheet(text):
         body=body
     ).execute()
 
-async def start(update: Update, context: CallbackContext):
+async def start(update: Update, context):
     """ Comando /start per il bot """
-    update.message.reply_text("Ciao! Inviami un'immagine e estrarrò il testo per te.")
+    await update.message.reply_text("Ciao! Inviami un'immagine e estrarrò il testo per te.")
 
-async def handle_photo(update: Update, context: CallbackContext):
+async def handle_photo(update: Update, context):
     """ Gestisce le immagini ricevute """
-    photo_file = update.message.photo[-1].get_file()
+    photo_file = await update.message.photo[-1].get_file()
     file_path = "image.jpg"
-    photo_file.download(file_path)
-    update.message.reply_text("Immagine ricevuta! Estraendo il testo...")
+    await photo_file.download(file_path)
+    await update.message.reply_text("Immagine ricevuta! Estraendo il testo...")
     
     text = ocr_image(file_path)
     if text:
         update_google_sheet(text)
-        update.message.reply_text(f"Testo estratto e salvato:\n{text}")
+        await update.message.reply_text(f"Testo estratto e salvato:\n{text}")
     else:
-        update.message.reply_text("Non sono riuscito a estrarre il testo. Assicurati che sia leggibile!")
+        await update.message.reply_text("Non sono riuscito a estrarre il testo. Assicurati che sia leggibile!")
     os.remove(file_path)
 
 async def main():
@@ -71,4 +71,5 @@ async def main():
     await application.run_polling()
 
 if __name__ == "__main__":
-    main()
+    import asyncio
+    asyncio.run(main())
