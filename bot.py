@@ -6,6 +6,7 @@ from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters
+import asyncio
 
 # Configura il logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -68,10 +69,13 @@ async def main():
     application = Application.builder().token(TELEGRAM_TOKEN).build()
     application.add_handler(CommandHandler("start", start))
     application.add_handler(MessageHandler(filters.PHOTO, handle_photo))
-    await application.run_polling()
+    
+    print("Bot avviato...")
+    await application.initialize()
+    await application.start()
+    await application.run_until_disconnected()
 
 if __name__ == "__main__":
-    import asyncio
     loop = asyncio.get_event_loop()
     loop.create_task(main())
     loop.run_forever()
