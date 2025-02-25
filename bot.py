@@ -51,24 +51,27 @@ async def start(update: Update, context):
 
 async def handle_photo(update: Update, context):
     """ Gestisce le immagini ricevute """
-    photo_file = await update.message.photo[-1].get_file()
-    file_path = "image.jpg"
-    await photo_file.download(file_path)
-    await update.message.reply_text("Immagine ricevuta! Estraendo il testo...")
-    
-    text = ocr_image(file_path)
-    if text:
-        update_google_sheet(text)
-        await update.message.reply_text(f"Testo estratto e salvato:\n{text}")
+    if update.message.photo:
+        photo_file = await update.message.photo[-1].get_file()
+        file_path = "image.jpg"
+        await photo_file.download(file_path)
+        await update.message.reply_text("Immagine ricevuta! Estraendo il testo...")
+        
+        text = ocr_image(file_path)
+        if text:
+            update_google_sheet(text)
+            await update.message.reply_text(f"Testo estratto e salvato:\n{text}")
+        else:
+            await update.message.reply_text("Non sono riuscito a estrarre il testo. Assicurati che sia leggibile!")
+        os.remove(file_path)
     else:
-        await update.message.reply_text("Non sono riuscito a estrarre il testo. Assicurati che sia leggibile!")
-    os.remove(file_path)
+        await update.message.reply_text("Non ho ricevuto nessuna immagine. Per favore invia una foto.")
 
 async def main():
     """ Avvia il bot """
     application = Application.builder().token(TELEGRAM_TOKEN).build()
     application.add_handler(CommandHandler("start", start))
-    application.add_handler(MessageHandler(filters.ALL & filters.PHOTO, handle_photo))
+    application.add_handler(MessageHandler(filters.PHOTO, handle_photo))
     
     print("Bot avviato...")
     await application.initialize()
